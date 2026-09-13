@@ -1,5 +1,13 @@
 const User = require("../models/user.model")
 const jwt = require("jsonwebtoken")
+User.pre("save",async function(){
+    if(!this.isModified("password")) return;
+    if(this.password !== this.confirmpassword){
+        throw Error("password and confrimpassword do not match")
+    }
+    this.password = await bcrypt.hash(this.password,8)
+    this.confirmpassword = undefined
+})
 const register = async (req,res,next)=>{
     try{
         const{
@@ -8,11 +16,23 @@ const register = async (req,res,next)=>{
             password,
             confirmpassword
         }=req.body
+        if(password !== confirmpassword){
+            return res.status(400).json({
+                success:false,
+                message:"Password and confirm password do not match"
+            })
+        }
+        const existingUser = await User.findOne({email})
+        if(existingUser){
+            return res.status(400).json({
+                success:false,
+                message:"Email already exists"
+            })
+        }
         const user = new User({
             name,
             email,
             password,
-            confirmpassword
         })
         await user.save()
         const token = jwt.sign(
