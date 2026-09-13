@@ -24,9 +24,10 @@ const ProductSchema = mongoose.Schema(
         },
         category: {
             type: String,
+            enum: ["Electronics", "Clothing", "Books", "Home", "Beauty", "Sports", "Toys", "Other"],
             required: [true, "Please, enter the category of the product"],
-            minlength: [2, "Category must be at least 2 characters long"],
-            maxlength: [50, "Category must not exceed 50 characters"]
+            // minlength: [2, "Category must be at least 2 characters long"],
+            // maxlength: [50, "Category must not exceed 50 characters"]
         },
         stock: {
             type: Number,
