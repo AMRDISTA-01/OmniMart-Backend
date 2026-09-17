@@ -1,0 +1,13 @@
+const express = require("express")
+const router = express.Router()
+const productController = require("../controllers/product.controller")
+const verifyToken = require("../middlewares/auth.middleware")
+const admin = require("../middlewares/admin.middleware")
+router.use(verifyToken)
+router.post("/",admin,productController.creatProduct)
+router.get("/",productController.getAllProducts)
+router.get("/:id",productController.getProductById)
+router.patch("/:id",admin,productController.updateProduct)
+router.delete("/:id",admin,productController.deleteProduct)
+router.get("/search",productController.searchProducts)
+module.exports = router

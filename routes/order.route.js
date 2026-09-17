@@ -1,0 +1,11 @@
+const express = require("express")
+const router = express.Router()
+const orderController = require("../controllers/order.controller")
+const verifyToken = require("../middlewares/auth.middleware")
+const admin = require("../middlewares/admin.middleware")
+router.use(verifyToken)
+router.post("/",orderController.checkout)
+router.get("/",orderController.getUserOrders)
+router.get("/:id",orderController.getOrderById)
+router.patch("/:id",admin,orderController.updateOrderStatus)
+module.exports = router
